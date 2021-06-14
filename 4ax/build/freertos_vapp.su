@@ -1,0 +1,6 @@
+/home/ruhung/STM32CubeIDE/workspace_1.7/4ax/Core/Src/freertos_vapp.c:11:6:vApplicationTickHook	4	static
+/home/ruhung/STM32CubeIDE/workspace_1.7/4ax/Core/Src/freertos_vapp.c:12:6:vApplicationMallocFailedHook	4	static
+/home/ruhung/STM32CubeIDE/workspace_1.7/4ax/Core/Src/freertos_vapp.c:13:6:vApplicationIdleHook	4	static
+/home/ruhung/STM32CubeIDE/workspace_1.7/4ax/Core/Src/freertos_vapp.c:14:6:vApplicationStackOverflowHook	16	static
+/home/ruhung/STM32CubeIDE/workspace_1.7/4ax/Core/Src/freertos_vapp.c:15:6:vApplicationGetIdleTaskMemory	24	static
+/home/ruhung/STM32CubeIDE/workspace_1.7/4ax/Core/Src/freertos_vapp.c:22:6:vApplicationGetTimerTaskMemory	24	static

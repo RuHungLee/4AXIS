@@ -1,0 +1,3 @@
+/home/ruhung/STM32CubeIDE/workspace_1.7/4ax/Core/Algorithm/pid.c:98:6:motor_update	16	static
+/home/ruhung/STM32CubeIDE/workspace_1.7/4ax/Core/Algorithm/pid.c:127:5:pid_control	24	static
+/home/ruhung/STM32CubeIDE/workspace_1.7/4ax/Core/Algorithm/pid.c:172:7:limit	24	static

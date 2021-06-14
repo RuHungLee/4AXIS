@@ -1,0 +1,7 @@
+/home/ruhung/STM32CubeIDE/workspace_1.7/4ax/Core/Src/uart.c:24:1:__io_putchar	16	static
+/home/ruhung/STM32CubeIDE/workspace_1.7/4ax/Core/Src/uart.c:31:6:USART1_IRQHandler	16	static
+/home/ruhung/STM32CubeIDE/workspace_1.7/4ax/Core/Src/uart.c:46:6:DMA2_Stream2_IRQHandler	8	static
+/home/ruhung/STM32CubeIDE/workspace_1.7/4ax/Core/Src/uart.c:52:6:USART2_IRQHandler	8	static
+/home/ruhung/STM32CubeIDE/workspace_1.7/4ax/Core/Src/uart.c:58:6:DMA1_Stream5_IRQHandler	8	static
+/home/ruhung/STM32CubeIDE/workspace_1.7/4ax/Core/Src/uart.c:63:6:SysTick_Handler	8	static
+/home/ruhung/STM32CubeIDE/workspace_1.7/4ax/Core/Src/uart.c:68:6:I2C1_EV_IRQHandler	8	static

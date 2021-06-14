@@ -1,0 +1,4 @@
+/home/ruhung/STM32CubeIDE/workspace_1.7/4ax/Drivers/STM32_DMP_Driver/Source/MPU6050/I2C.c:5:19:i2c_write	32	static
+/home/ruhung/STM32CubeIDE/workspace_1.7/4ax/Drivers/STM32_DMP_Driver/Source/MPU6050/I2C.c:11:19:i2c_read	32	static
+/home/ruhung/STM32CubeIDE/workspace_1.7/4ax/Drivers/STM32_DMP_Driver/Source/MPU6050/I2C.c:18:19:IICwriteBit	32	static
+/home/ruhung/STM32CubeIDE/workspace_1.7/4ax/Drivers/STM32_DMP_Driver/Source/MPU6050/I2C.c:27:19:IICwriteBits	32	static

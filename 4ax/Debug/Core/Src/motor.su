@@ -1,0 +1,3 @@
+motor.c:6:6:motor_Init	8	static
+motor.c:21:6:mt_Forward	24	static
+motor.c:33:6:mt_Backward	24	static

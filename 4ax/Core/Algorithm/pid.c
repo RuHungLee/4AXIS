@@ -15,7 +15,7 @@
 #define kd_rate_yaw 0.0
 
 #define kp_roll 0.0
-#define kp_pitch 3.0
+#define kp_pitch 1.8
 #define kp_yaw 0.0
 
 #define ki_roll 0.0
@@ -23,7 +23,7 @@
 #define ki_yaw 0.0
 
 #define kd_roll 0.0
-#define kd_pitch 5.0
+#define kd_pitch 1.0
 #define kd_yaw 0.0
 
 //積分限幅
@@ -34,10 +34,6 @@ extern float roll , pitch , yaw;
 extern short gyro[3];
 extern int throttle;
 extern uint8_t rx_Buffer[1024];
-
-// float roll_p , roll_i , roll_d , roll_inner_p , roll_inner_i , roll_inner_d;
-// float pitch_p , pitch_i , pitch_d , pitch_inner_p , pitch_inner_i , pitch_inner_d;
-// float yaw_p , yaw_i , yaw_d , yaw_inner_p , yaw_inner_i , yaw_inner_d;
 
 
 pst pid_roll = {
@@ -93,20 +89,18 @@ pst pid_yaw = {
 };
 
 
-// static int cnt = 0;
 
 void motor_update(){
 
 
-    int pid_pitch_value = limit(pid_control(0.0 , 0.0 , 0.0) , 100 , -100);
+    int pid_pitch_value = limit(pid_control(0.0 , 0.0 , 0.0) , 200 , -200);
+    // printf("pitch : %.3f , pid_pitch_value : %d\n" , pitch , pid_pitch_value);
+    //大於 60 度時停止馬達。
+    if(fabs(pitch) > 50){throttle = 800;}
 
-    //大於 60 度時暫停馬達。
-    if(fabs(pitch) > 50){throttle = 0;}
-
-    if(throttle >= 500){
+    if(throttle > 800){
         
-        
-        ch1 = throttle - pid_pitch_value;
+        ch1 = throttle - pid_pitch_value - 3;
         ch2 = throttle + pid_pitch_value;
         ch3 = throttle + pid_pitch_value; 
         ch4 = throttle - pid_pitch_value;
@@ -114,10 +108,10 @@ void motor_update(){
 
     }else{
 
-        ch1 = 300;
-        ch2 = 300;
-        ch3 = 300;
-        ch4 = 300;
+        ch1 = 800;
+        ch2 = 800;
+        ch3 = 800;
+        ch4 = 800;
 
     }
 
@@ -126,7 +120,7 @@ void motor_update(){
 
 int pid_control(float set_roll , float set_pitch , float set_yaw){
 
-    short pid_roll_bias , pid_pitch_bias , pid_yaw_bias;
+    // short pid_roll_bias , pid_pitch_bias   , pid_yaw_bias;
 
     // 將當前角度和目標角度誤差輸入 PID 控制器
 
@@ -150,15 +144,15 @@ int pid_control(float set_roll , float set_pitch , float set_yaw){
         pid_pitch.last_ang = *pid_pitch.feedback;
         pid_pitch.last_error = pid_pitch.error;  
 
+        // printf("%s" , rx_Buffer);
+        // printf("pid_pitch_out : %.3f" , pid_pitch.out);
         // printf("pitch's pid : kp : %.3f , ki : %.3f kd : %.3f\n" , pid_pitch.p , pid_pitch.i , pid_pitch.d);
-        printf("%s" , rx_Buffer);
         // printf("pid_pitch.kp * pid_pitch.p + pid_pitch.ki * pid_pitch.i : %.2f\n" , pid_pitch.kp * pid_pitch.p + pid_pitch.ki * pid_pitch.i);
         // printf("pid_pitch.kp * pid_pitch.p + pid_pitch.ki * pid_pitch.i + pid_pitch.kd * pid_pitch.d : %.2f\n" , pid_pitch.out);
         // printf("d1 : %.2f\n d2(gyro) : %.d\n", pid_pitch.d , gyro[1]);
         // PD 內環控制角速度
 
-        // ......
-    
+
         pid_pitch.last_out = pid_pitch.out;
         
         return (int)pid_pitch.out;
@@ -179,6 +173,9 @@ float limit(float n , float max , float min){
 
     return n;
 }
+
+
+
 // pid_st pid_roll = { 
 //     .InnerLast = 0;
 //     .OutterLast = 0;

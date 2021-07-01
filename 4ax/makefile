@@ -25,6 +25,7 @@ BIN_DIR = $(CURDIR)/binary
 
 vpath %.c   $(CORE)/Src \
 			$(CORE)/Algorithm \
+			$(CORE)/anoPro \
 			$(CORE)/Startup \
 			$(DRIVERS)/STM32_DMP_Driver/Source/MPU6050 \
 			$(DRIVERS)/STM32F4xx_HAL_Driver/Src \
@@ -45,6 +46,9 @@ src+=freertos_vapp.c
 src+=stm32f4xx_hal_msp.c
 src+=syscalls.c
 src+=system_stm32f4xx.c
+
+# 地面站
+src+=ano.c
 
 # 演算法
 src+=pid.c

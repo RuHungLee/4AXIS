@@ -16,6 +16,7 @@ INCLUDE=-I$(CORE)/Inc
 INCLUDE+=-I$(DRIVERS)/CMSIS/Device/ST/STM32F4xx/Include
 INCLUDE+=-I$(DRIVERS)/CMSIS/Include
 INCLUDE+=-I$(DRIVERS)/STM32_DMP_Driver/Include/MPU6050
+INCLUDE+=-I$(DRIVERS)/STM32_2401_Driver/Include
 INCLUDE+=-I$(DRIVERS)/STM32F4xx_HAL_Driver/Inc
 INCLUDE+=-I$(FREERTOS)/portable/GCC/ARM_CM4F
 INCLUDE+=-I$(FREERTOS)/include
@@ -28,6 +29,7 @@ vpath %.c   $(CORE)/Src \
 			$(CORE)/anoPro \
 			$(CORE)/Startup \
 			$(DRIVERS)/STM32_DMP_Driver/Source/MPU6050 \
+			$(DRIVERS)/STM32_2401_Driver/Source \
 			$(DRIVERS)/STM32F4xx_HAL_Driver/Src \
 			$(FREERTOS) \
 			$(FREERTOS)/portable/MemMang \
@@ -73,12 +75,17 @@ src+=stm32f4xx_hal_tim_ex.c
 src+=stm32f4xx_hal_uart.c
 src+=stm32f4xx_hal_i2c.c
 src+=stm32f4xx_hal_i2c_ex.c
+src+=stm32f4xx_hal_spi.c
 
 # MPU6050 驅動程式
 src+=I2C.c
 src+=inv_mpu.c
 src+=inv_mpu_dmp_motion_driver.c
 src+=mpu6050.c
+
+
+# nrf2401 驅動程式
+src+=nrf24.c
 
 # FreeRtos
 src+=tasks.c

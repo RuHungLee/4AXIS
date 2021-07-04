@@ -1,5 +1,5 @@
-/home/ruhung/4axis/4AXIS/4ax/build/uart.o: \
- /home/ruhung/4axis/4AXIS/4ax/Core/Src/uart.c \
+/home/ruhung/4axis/4AXIS/4ax/build/esp.o: \
+ /home/ruhung/4axis/4AXIS/4ax/Drivers/STM32_ESP8266/Source/esp.c \
  /home/ruhung/4axis/4AXIS/4ax/Core/Inc/main.h \
  /home/ruhung/4axis/4AXIS/4ax/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  /home/ruhung/4axis/4AXIS/4ax/Core/Inc/stm32f4xx_hal_conf.h \

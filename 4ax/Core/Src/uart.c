@@ -23,6 +23,7 @@ uint8_t rx_Buffer[BUFFER_SIZE];
 
 PUTCHAR_PROTOTYPE
 {
+
 	HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, 0xFFFF);
 	return ch;
 }
@@ -37,8 +38,10 @@ void USART1_IRQHandler(void)
     rx_end_flag = 1;
     HAL_UART_Receive_DMA(&huart1 , rx_Buffer , BUFFER_SIZE);
   }
-  //test
-  throttle = atoi(rx_Buffer);
+  rx_Buffer[rx_Len] = 0;
+
+  printf("received Strings : %s\n" , rx_Buffer);
+  
   HAL_UART_IRQHandler(&huart1);
 }
 

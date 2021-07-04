@@ -1,5 +1,1 @@
-/home/ruhung/4axis/4AXIS/4ax/Drivers/STM32_2401_Driver/Include/support.h:18:20:nRF24_CE_L	8	static
-/home/ruhung/4axis/4AXIS/4ax/Drivers/STM32_2401_Driver/Include/support.h:22:20:nRF24_CE_H	8	static
-/home/ruhung/4axis/4AXIS/4ax/Drivers/STM32_2401_Driver/Include/support.h:45:20:Delay_ms	16	static
-/home/ruhung/4axis/4AXIS/4ax/Core/Src/main.c:40:5:main	32	static
-/home/ruhung/4axis/4AXIS/4ax/Core/Src/main.c:142:16:nRF24_TransmitPacket	24	static
+/home/ruhung/4axis/4AXIS/4ax/Core/Src/main.c:28:5:main	40	static

@@ -1,1 +1,2 @@
-/home/ruhung/4axis/4AXIS/4ax/Core/anoPro/ano.c:5:6:Send_Sensor	64	static
+/home/ruhung/4axis/4AXIS/4ax/Core/Src/ano.c:20:6:ANO_DT_Send_Status	48	static
+/home/ruhung/4axis/4AXIS/4ax/Core/Src/ano.c:61:6:ANO_DT_Send_RCData	32	static

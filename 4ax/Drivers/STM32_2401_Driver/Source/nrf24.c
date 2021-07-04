@@ -122,25 +122,22 @@ void nRF24_Init(void) {
     nRF24_SetCRCScheme(nRF24_CRC_2byte);
 
     // Set address width, its common for all pipes (RX and TX)
-    // nRF24_SetAddrWidth(3);
     nRF24_SetAddrWidth(5);
 
-    // Configure TX PIPE
-    // static const uint8_t nRF24_ADDR[] = { 0xE7, 0x1C, 0xE3 };
-    static const uint8_t nRF24_ADDR[] = "leeru";
-    nRF24_SetAddr(nRF24_PIPETX, nRF24_ADDR); // program TX address
+    // Configure RX PIPE#1
+    static const uint8_t nRF24_ADDR[6] = "aaaaa";
+    nRF24_SetAddr(nRF24_PIPE1, nRF24_ADDR); // program address for RX pipe #1
+    nRF24_SetRXPipe(nRF24_PIPE1, nRF24_AA_OFF, 5); // Auto-ACK: disabled, payload length: 5 bytes
 
-    // Set TX power (maximum)
-    nRF24_SetTXPower(nRF24_TXPWR_0dBm);
-
-    // Set operational mode (PTX == transmitter)
-    nRF24_SetOperationalMode(nRF24_MODE_TX);
-
-    // Clear any pending IRQ flags
-    nRF24_ClearIRQFlags();
+    // Set operational mode (PRX == receiver)
+    nRF24_SetOperationalMode(nRF24_MODE_RX);
 
     // Wake the transceiver
     nRF24_SetPowerMode(nRF24_PWR_UP);
+
+    // Put the transceiver to the RX mode
+    nRF24_CE_H();
+
 }
 
 // Check if the nRF24L01 present

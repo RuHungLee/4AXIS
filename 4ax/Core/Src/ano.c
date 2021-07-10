@@ -7,6 +7,7 @@
  * ŒŒÊõQÈº £º190169595
 **********************************************************************************/
 #include "ano.h"
+#include "esp.h"
 
 #define BYTE0(dwTemp)       ( *( (char *)(&dwTemp)		) )
 #define BYTE1(dwTemp)       ( *( (char *)(&dwTemp) + 1) )
@@ -98,6 +99,23 @@ void ANO_DT_Send_RCData(u16 thr,u16 yaw,u16 rol,u16 pit,u16 aux1,u16 aux2,u16 au
 	ESP_Send(data_to_send, _cnt);
 }
 
+void ANO_DT_Send_Check(u8 head, u8 check_sum)
+{
+	data_to_send[0]=0xAA;
+	data_to_send[1]=0xAA;
+	data_to_send[2]=0xEF;
+	data_to_send[3]=2;
+	data_to_send[4]=head;
+	data_to_send[5]=check_sum;
+	
+	
+	u8 sum = 0;
+	for(u8 i=0;i<6;i++)
+		sum += data_to_send[i];
+	data_to_send[6]=sum;
+
+	ESP_Send(data_to_send, 7);
+}
 
 // void ANO_DT_Send_Data(u8 *dataToSend , u8 length)
 // {
@@ -197,23 +215,6 @@ void ANO_DT_Send_RCData(u16 thr,u16 yaw,u16 rol,u16 pit,u16 aux1,u16 aux2,u16 au
 
 
 
-// static void ANO_DT_Send_Check(u8 head, u8 check_sum)
-// {
-// 	data_to_send[0]=0xAA;
-// 	data_to_send[1]=0xAA;
-// 	data_to_send[2]=0xEF;
-// 	data_to_send[3]=2;
-// 	data_to_send[4]=head;
-// 	data_to_send[5]=check_sum;
-	
-	
-// 	u8 sum = 0;
-// 	for(u8 i=0;i<6;i++)
-// 		sum += data_to_send[i];
-// 	data_to_send[6]=sum;
-
-// 	ANO_DT_Send_Data(data_to_send, 7);
-// }
 
 // void ANO_DT_Data_Receive_Prepare(u8 data)
 // {

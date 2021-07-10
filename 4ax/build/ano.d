@@ -31,7 +31,8 @@
  /home/ruhung/4axis/4AXIS/4ax/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
  /home/ruhung/4axis/4AXIS/4ax/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  /home/ruhung/4axis/4AXIS/4ax/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- /home/ruhung/4axis/4AXIS/4ax/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
+ /home/ruhung/4axis/4AXIS/4ax/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ /home/ruhung/4axis/4AXIS/4ax/Drivers/STM32_ESP8266/Include/esp.h
 /home/ruhung/4axis/4AXIS/4ax/Core/Inc/ano.h:
 /home/ruhung/4axis/4AXIS/4ax/Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h:
 /home/ruhung/4axis/4AXIS/4ax/Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h:
@@ -64,3 +65,4 @@
 /home/ruhung/4axis/4AXIS/4ax/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 /home/ruhung/4axis/4AXIS/4ax/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 /home/ruhung/4axis/4AXIS/4ax/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
+/home/ruhung/4axis/4AXIS/4ax/Drivers/STM32_ESP8266/Include/esp.h:

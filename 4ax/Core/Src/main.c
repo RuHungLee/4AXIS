@@ -8,34 +8,44 @@
 #include "nrf24.h"
 #include "esp.h"
 #include "ano.h"
+#include <string.h>
 #include <stdio.h>
 
-extern TIM_HandleTypeDef htim3;
-extern TIM_HandleTypeDef htim4;
-extern TIM_HandleTypeDef htim5;
-extern UART_HandleTypeDef huart1;
-extern UART_HandleTypeDef huart2;
-extern DMA_HandleTypeDef hdma_usart1_rx;
-extern DMA_HandleTypeDef hdma_usart2_rx;
-extern I2C_HandleTypeDef hi2c1;
-extern float q0 , q1 , q2 , q3 , roll , pitch , yaw , Pitch;
+// extern TIM_HandleTypeDef htim3;
+// extern TIM_HandleTypeDef htim4;
+// extern TIM_HandleTypeDef htim5;
+// extern UART_HandleTypeDef huart1;
+// extern UART_HandleTypeDef huart2;
+// extern DMA_HandleTypeDef hdma_usart1_rx;
+// extern DMA_HandleTypeDef hdma_usart2_rx;
+// extern I2C_HandleTypeDef hi2c1;
+extern float roll , pitch , yaw;
+extern pst pid_roll , pid_pitch , pid_raw;
 extern int throttle;
 extern uint8_t rx_Buffer[1024];
-
+extern uint8_t packetRecved;
 #define CCM_RAM __attribute__((section(".ccmram")))
+
+
+void UDPHandler(void);
+void PIDupdate(char *);
+
+uint16_t r16(uint16_t x){
+  return (x << 8) | (x >> 8);
+}
 
 
 int main(void)
 {
 
- 	//驅動以及網路初始化
- 	Init();
+   	//驅動以及網路初始化
+   	Init();
   	MPU6050_initialize();
   	DMP_Init();
   	ESP_Init();
 
   	// 800 : 0% , 1600 : 100%
-  	 // intiialize 
+  	// intiialize 
   	// ch1 = 1600;
   	// ch2 = 1600;
   	// ch3 = 1600;
@@ -58,25 +68,109 @@ int main(void)
 
   	while(1){
 
-  		printf("hello\n");
-		Read_DMP();
-		ToEulerAngles();
-		printf("roll : %.3f , pitch : %.3f , yaw : %.3f\n" , roll , pitch , yaw);
-		ANO_DT_Send_Status(roll, pitch , yaw , 0 , 0 , 0);
-		// printf("hello\n");
-		// HAL_Delay(2000);
-		
-		// motor_update();
-		// HAL_Delay(100);
-		// printf("pitch : %.3f , gyro_1 : %.3f\n" , pitch , gyro[1]);
-		// printf("hello\n");
-		// printf("gyro_x : %hi gyro_y : %hi gyro_z : %hi\n" , (short)((float)gyro[0] * 0.0305175) , (short)((float)gyro[1] * 0.0305175) , (short)((float)gyro[2] * 0.0305175)); 		
-		// Send_Sensor(1 , 1 , 1 , (short)((float)gyro[0] * 0.0305175) , (short)((float)gyro[1] * 0.0305175) , (short)((float)gyro[2] * 0.0305175) , 1 , 1 , 1);
-	}
+  		Read_DMP();
+  		ToEulerAngles();
+  		ANO_DT_Send_Status(roll, pitch , yaw , 0 , 0 , 0);
+  		UDPHandler();
+  		motor_update();	
+
+  }
 
 }
  
 
+void UDPHandler(void)
+{
+
+  if(packetRecved){
+
+    // printf("payload : %s\n" , rx_Buffer);
+    char *ptr = strstr((char *)rx_Buffer , "\xaa\xaf");
+    
+    //不是地面站封包  
+    if(ptr == NULL){return;}
+    
+    ptr += 2;
+
+    switch(ptr[0]){
+      
+      case '\x10':
+
+        PIDupdate(ptr+1);
+    }
+  }
+
+  packetRecved = 0;
+
+}
+
+
+void PIDupdate(char *packet){
+
+  char *ptr;
+  char sum;
+  float p1 , i1 , d1 , p2 , i2 , d2 , p3 , i3 , d3;
+
+  sum = 0;
+  ptr = packet;
+  
+  // length = *(char *)ptr[0]; 
+  
+  ptr = ptr + 1;
+  sum += *(uint16_t *)ptr;
+  p1 = *(uint16_t *)ptr/100.0;
+  
+  ptr = ptr + 2;
+  sum += *(uint16_t *)ptr;
+  i1 = *(uint16_t *)ptr/100.0;
+  
+  ptr = ptr + 2;
+  sum += *(uint16_t *)ptr;
+  d1 = *(uint16_t *)ptr/100.0;
+  
+  ptr = ptr + 2;
+  sum += *(uint16_t *)ptr;
+  p2 = *(uint16_t *)ptr/100.0;
+  
+  ptr = ptr + 2;
+  sum += *(uint16_t *)ptr;
+  i2 = *(uint16_t *)ptr/100.0;
+  
+  ptr = ptr + 2;
+  sum += *(uint16_t *)ptr;
+  d2 = *(uint16_t *)ptr/100.0;
+  
+  ptr = ptr + 2;
+  sum += *(uint16_t *)ptr;
+  p3 = *(uint16_t *)ptr/100.0;
+  
+  ptr = ptr + 2;
+  sum += *(uint16_t *)ptr;
+  i3 = *(uint16_t *)ptr/100.0;
+  
+  ptr = ptr + 2;
+  sum += *(uint16_t *)ptr;
+  d3 = *(uint16_t *)ptr/100.0;
+  
+  ptr = ptr + 2;
+
+  char check = *(char *)ptr;
+  // printf("check : %d , sum : %d\n" , check , sum);
+  if(check == (sum & 0x00ff)){
+    
+    pid_roll.kp = p1;
+    pid_roll.ki = i1;
+    pid_roll.kd = d1;
+    pid_pitch.kp = p2;
+    pid_pitch.ki = i2;
+    pid_pitch.kd = d2;
+    pid_raw.kp = p3;
+    pid_raw.ki = i3;
+    pid_raw.kd = d3;
+
+  }
+
+}
 // // Used for not stuck waiting for IRQ
 // #define nRF24_WAIT_TIMEOUT         (uint32_t)0x000FFFFF
 

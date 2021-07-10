@@ -71,7 +71,7 @@ pst pid_pitch = {
     .feedback = &pitch
 };
 
-pst pid_yaw = {
+pst pid_raw = {
 
     .kp_rate = kp_rate_yaw,
     .ki_rate = ki_rate_yaw,
@@ -94,7 +94,7 @@ void motor_update(){
 
 
     int pid_pitch_value = limit(pid_control(0.0 , 0.0 , 0.0) , 200 , -200);
-    // printf("pitch : %.3f , pid_pitch_value : %d\n" , pitch , pid_pitch_value);
+
     //大於 60 度時停止馬達。
     if(fabs(pitch) > 50){throttle = 800;}
 

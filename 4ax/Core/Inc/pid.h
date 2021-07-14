@@ -1,12 +1,6 @@
 #ifndef PID_H
 #define PID_H
 
-// extern float kp_rate 0.0
-// extern float ki_rate 0.0
-// extern float kd_rate 0.0
-// extern float kp 0.0
-// extern float ki 0.0
-// extern float kd 0.0
 float limit(float , float , float);
 int pid_control(float , float , float);
 void motor_update();

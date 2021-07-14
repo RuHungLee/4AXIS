@@ -1,4 +1,4 @@
-/home/ruhung/4axis/4AXIS/4ax/Core/Src/init.c:22:6:Init	8	static
+/home/ruhung/4axis/4AXIS/4ax/Core/Src/init.c:22:6:sysInit	8	static
 /home/ruhung/4axis/4AXIS/4ax/Core/Src/init.c:38:6:MX_SPI2_Init	8	static
 /home/ruhung/4axis/4AXIS/4ax/Core/Src/init.c:62:6:SystemClock_Config	88	static
 /home/ruhung/4axis/4AXIS/4ax/Core/Src/init.c:98:6:MX_I2C1_Init	8	static

@@ -13,7 +13,8 @@ void ESP_Init(void)
 {
 	
 	while(!espInit){
-
+		HAL_UART_Transmit(&huart1 , (uint8_t *)"ATE0\r\n", 6 , 2000);
+		HAL_Delay(100);
 		HAL_UART_Transmit(&huart1 , (uint8_t *)"AT+RST\r\n", 8 , 2000);
 		HAL_Delay(100);
 		HAL_UART_Transmit(&huart1 , (uint8_t *)"AT+CWMODE=2\r\n", 13 , 2000);

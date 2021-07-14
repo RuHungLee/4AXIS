@@ -2,6 +2,7 @@
 
 #include "nrf24.h"
 
+
 // Read a register
 // input:
 //   reg - number of register to read
@@ -68,6 +69,8 @@ static void nRF24_WriteMBReg(uint8_t reg, uint8_t *pBuf, uint8_t count) {
 }
 
 // Set transceiver to it's initial state
+extern UART_HandleTypeDef huart2;
+
 // note: RX/TX pipe addresses remains untouched
 void nRF24_Init(void) {
 
@@ -99,6 +102,14 @@ void nRF24_Init(void) {
 	nRF24_WriteReg(nRF24_REG_DYNPD, 0x00);
 	nRF24_WriteReg(nRF24_REG_FEATURE, 0x00);
 
+	char rxbuf[0x100];
+
+	for(int i = 0 ; i < 0xf0 ; i++){
+		uint8_t check = nRF24_ReadReg(i);
+	}
+	// Compare buffers, return error on first mismatch
+
+
 	// Clear the FIFO's
 	nRF24_FlushRX();
 	nRF24_FlushTX();
@@ -125,9 +136,9 @@ void nRF24_Init(void) {
     nRF24_SetAddrWidth(5);
 
     // Configure RX PIPE#1
-    static const uint8_t nRF24_ADDR[6] = "aaaaa";
+    static const uint8_t nRF24_ADDR[6] = "1Node";
     nRF24_SetAddr(nRF24_PIPE1, nRF24_ADDR); // program address for RX pipe #1
-    nRF24_SetRXPipe(nRF24_PIPE1, nRF24_AA_OFF, 5); // Auto-ACK: disabled, payload length: 5 bytes
+    nRF24_SetRXPipe(nRF24_PIPE1, nRF24_AA_OFF, 32); // Auto-ACK: disabled, payload length: 32 bytes
 
     // Set operational mode (PRX == receiver)
     nRF24_SetOperationalMode(nRF24_MODE_RX);
@@ -137,8 +148,8 @@ void nRF24_Init(void) {
 
     // Put the transceiver to the RX mode
     nRF24_CE_H();
-
-}
+	
+}	
 
 // Check if the nRF24L01 present
 // return:

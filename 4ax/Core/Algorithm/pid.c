@@ -1,4 +1,5 @@
 #include "pid.h"
+#include "post.h"
 #include "math.h"
 #include "motor.h"
 
@@ -30,6 +31,7 @@
 #define pid_imax 2000.0
 #define pid_imin -2000.0
 
+extern post Qpost;
 extern float roll , pitch , yaw;
 extern short gyro[3];
 extern int throttle;
@@ -93,12 +95,13 @@ pst pid_raw = {
 void motor_update(){
 
 
-    int pid_pitch_value = limit(pid_control(0.0 , 0.0 , 0.0) , 200 , -200);
+    int pid_pitch_value = limit(pid_control(Qpost.roll , Qpost.pitch , Qpost.yaw) , 200 , -200);
+    throttle = Qpost.throttle;
 
     //大於 60 度時停止馬達。
     if(fabs(pitch) > 50){throttle = 800;}
 
-    if(throttle > 800){
+    if(throttle > 850){
         
         ch1 = throttle - pid_pitch_value - 3;
         ch2 = throttle + pid_pitch_value;
@@ -108,10 +111,10 @@ void motor_update(){
 
     }else{
 
-        ch1 = 800;
-        ch2 = 800;
-        ch3 = 800;
-        ch4 = 800;
+        ch1 = throttle;
+        ch2 = throttle;
+        ch3 = throttle;
+        ch4 = throttle;
 
     }
 

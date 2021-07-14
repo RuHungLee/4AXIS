@@ -1,6 +1,7 @@
 /home/ruhung/4axis/4AXIS/4ax/build/pid.o: \
  /home/ruhung/4axis/4AXIS/4ax/Core/Algorithm/pid.c \
  /home/ruhung/4axis/4AXIS/4ax/Core/Inc/pid.h \
+ /home/ruhung/4axis/4AXIS/4ax/Core/Inc/post.h \
  /home/ruhung/4axis/4AXIS/4ax/Core/Inc/motor.h \
  /home/ruhung/4axis/4AXIS/4ax/Core/Inc/main.h \
  /home/ruhung/4axis/4AXIS/4ax/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
@@ -35,6 +36,7 @@
  /home/ruhung/4axis/4AXIS/4ax/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  /home/ruhung/4axis/4AXIS/4ax/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 /home/ruhung/4axis/4AXIS/4ax/Core/Inc/pid.h:
+/home/ruhung/4axis/4AXIS/4ax/Core/Inc/post.h:
 /home/ruhung/4axis/4AXIS/4ax/Core/Inc/motor.h:
 /home/ruhung/4axis/4AXIS/4ax/Core/Inc/main.h:
 /home/ruhung/4axis/4AXIS/4ax/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:

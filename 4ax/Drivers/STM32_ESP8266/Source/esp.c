@@ -42,6 +42,6 @@ void ESP_Send(char *msg , uint8_t len){
 	snprintf(cmd , 1024 , "AT+CIPSEND=0,%d\r\n" , len);
 	// printf("length : %d\n" , len);
 	HAL_UART_Transmit(&huart1 , (uint8_t *)cmd , strlen(cmd) , 2000);
-	HAL_Delay(5);
+	HAL_Delay(0.1);
 	HAL_UART_Transmit(&huart1 , (uint8_t *)msg , len , 2000);
 }

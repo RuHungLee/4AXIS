@@ -15,7 +15,7 @@
 #define CCM_RAM __attribute__((section(".ccmram")))
 
 extern float roll , pitch , yaw;
-extern pst pid_roll , pid_pitch , pid_raw;
+extern pst pid_roll , pid_pitch , pid_yaw;
 extern int throttle;
 extern uint8_t rx_Buffer[1024];
 extern uint8_t packetRecved;
@@ -49,14 +49,20 @@ int main(void)
 
   		Read_DMP();
   		ToEulerAngles();
-  		// ANO_DT_Send_Status(roll, pitch , yaw , 0 , 0 , 0);
+      // if(cnt % 10 == 0){
+  		  // ANO_DT_Send_Status(roll, pitch , yaw , 0 , 0 , 0);
+      // }
   		packetHandler();
-  		// motor_update();  
-
-      printf("Qpost\n");
-      printf("throttle : %d\n" , Qpost.throttle);
-      printf("roll : %.2f\n" , Qpost.roll);
-      printf("pitch : %.2f\n" , Qpost.pitch);
+  		motor_update();  
+      cnt = cnt + 1;
+      // printf("cnt : %d\n" , cnt++);
+      // printf("roll : %.2f\n" , Qpost.roll);
+      // printf("pitch : %.2f\n" , Qpost.pitch);
+      // printf("yaw : %.2f\n" , Qpost.yaw);
+      // printf("kp : %.2f\n" , pid_pitch.kp);
+      // printf("ki : %.2f\n" , pid_pitch.ki);
+      // printf("kd : %.2f\n" , pid_pitch.kd);
+    
     }
 }
  
@@ -141,9 +147,9 @@ void PIDupdate(char *packet){
     pid_pitch.kp = p2;
     pid_pitch.ki = i2;
     pid_pitch.kd = d2;
-    pid_raw.kp = p3;
-    pid_raw.ki = i3;
-    pid_raw.kd = d3;
+    pid_yaw.kp = p3;
+    pid_yaw.ki = i3;
+    pid_yaw.kd = d3;
 
   }
 

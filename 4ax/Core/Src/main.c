@@ -49,20 +49,35 @@ int main(void)
 
   		Read_DMP();
   		ToEulerAngles();
-      // if(cnt % 10 == 0){
-  		  // ANO_DT_Send_Status(roll, pitch , yaw , 0 , 0 , 0);
-      // }
+      pitch = pitch + 1;
+      if(cnt % 20 == 0){
+  		  ANO_DT_Send_Status(roll , pitch , yaw , 0 , 0 , 0);
+      }
   		packetHandler();
   		motor_update();  
       cnt = cnt + 1;
-      // printf("cnt : %d\n" , cnt++);
-      // printf("roll : %.2f\n" , Qpost.roll);
-      // printf("pitch : %.2f\n" , Qpost.pitch);
-      // printf("yaw : %.2f\n" , Qpost.yaw);
+
+      // printf("kp : %.2f\n" , pid_roll.kp);
+      // printf("ki : %.2f\n" , pid_roll.ki);
+      // printf("kd : %.2f\n" , pid_roll.kd);
+      // printf("kp_rate : %.2f\n" , pid_roll.kp_rate);
+      // printf("ki_rate : %.2f\n" , pid_roll.ki_rate);
+      // printf("kd_rate : %.2f\n" , pid_roll.kd_rate);
+    
       // printf("kp : %.2f\n" , pid_pitch.kp);
       // printf("ki : %.2f\n" , pid_pitch.ki);
       // printf("kd : %.2f\n" , pid_pitch.kd);
-    
+      // printf("kp_rate : %.2f\n" , pid_pitch.kp_rate);
+      // printf("ki_rate : %.2f\n" , pid_pitch.ki_rate);
+      // printf("kd_rate : %.2f\n" , pid_pitch.kd_rate);
+
+      // printf("kp : %.2f\n" , pid_yaw.kp);
+      // printf("ki : %.2f\n" , pid_yaw.ki);
+      // printf("kd : %.2f\n" , pid_yaw.kd);
+      // printf("kp_rate : %.2f\n" , pid_yaw.kp_rate);
+      // printf("ki_rate : %.2f\n" , pid_yaw.ki_rate);
+      // printf("kd_rate : %.2f\n" , pid_yaw.kd_rate);
+      
     }
 }
  
@@ -100,38 +115,66 @@ void PIDupdate(char *packet){
   char *ptr;
   uint8_t sum , ck , i;
   float p1 , i1 , d1 , p2 , i2 , d2 , p3 , i3 , d3;
+  float p1_rate , i1_rate , d1_rate , p2_rate , i2_rate , d2_rate , p3_rate , i3_rate , d3_rate;
 
   sum = 0;
   ptr = packet;
   
   
   ptr = ptr + 1;
-  p1 = *(uint16_t *)ptr/100.0;
+  p1 = *(uint16_t *)ptr/1000.0;
   
   ptr = ptr + 2;
-  i1 = *(uint16_t *)ptr/100.0;
+  i1 = *(uint16_t *)ptr/1000.0;
   
   ptr = ptr + 2;
-  d1 = *(uint16_t *)ptr/100.0;
+  d1 = *(uint16_t *)ptr/1000.0;
   
   ptr = ptr + 2;
-  p2 = *(uint16_t *)ptr/100.0;
+  p2 = *(uint16_t *)ptr/1000.0;
   
   ptr = ptr + 2;
-  i2 = *(uint16_t *)ptr/100.0;
+  i2 = *(uint16_t *)ptr/1000.0;
   
   ptr = ptr + 2;
-  d2 = *(uint16_t *)ptr/100.0;
+  d2 = *(uint16_t *)ptr/1000.0;
   
   ptr = ptr + 2;
-  p3 = *(uint16_t *)ptr/100.0;
+  p3 = *(uint16_t *)ptr/1000.0;
   
   ptr = ptr + 2;
-  i3 = *(uint16_t *)ptr/100.0;
+  i3 = *(uint16_t *)ptr/1000.0;
   
   ptr = ptr + 2;
-  d3 = *(uint16_t *)ptr/100.0;
+  d3 = *(uint16_t *)ptr/1000.0;
+
+  ptr = ptr + 2;
+  p1_rate = *(uint16_t *)ptr/1000.0;
   
+  ptr = ptr + 2;
+  i1_rate = *(uint16_t *)ptr/1000.0;
+  
+  ptr = ptr + 2;
+  d1_rate = *(uint16_t *)ptr/1000.0;
+  
+  ptr = ptr + 2;
+  p2_rate = *(uint16_t *)ptr/1000.0;
+  
+  ptr = ptr + 2;
+  i2_rate = *(uint16_t *)ptr/1000.0;
+  
+  ptr = ptr + 2;
+  d2_rate = *(uint16_t *)ptr/1000.0;
+  
+  ptr = ptr + 2;
+  p3_rate = *(uint16_t *)ptr/1000.0;
+  
+  ptr = ptr + 2;
+  i3_rate = *(uint16_t *)ptr/1000.0;
+  
+  ptr = ptr + 2;
+  d3_rate = *(uint16_t *)ptr/1000.0;
+
   ptr = ptr + 2;
   ck = *(char *)ptr;
 
@@ -150,6 +193,16 @@ void PIDupdate(char *packet){
     pid_yaw.kp = p3;
     pid_yaw.ki = i3;
     pid_yaw.kd = d3;
+
+    pid_roll.kp_rate = p1_rate;
+    pid_roll.ki_rate = i1_rate;
+    pid_roll.kd_rate = d1_rate;
+    pid_pitch.kp_rate = p2_rate;
+    pid_pitch.ki_rate = i2_rate;
+    pid_pitch.kd_rate = d2_rate;
+    pid_yaw.kp_rate = p3_rate;
+    pid_yaw.ki_rate = i3_rate;
+    pid_yaw.kd_rate = d3_rate;
 
   }
 

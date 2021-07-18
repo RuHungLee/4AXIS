@@ -55,7 +55,8 @@ src+=system_stm32f4xx.c
 src+=ano.c
 
 # 演算法
-src+=pid.c
+# src+=pid.c
+src += pid2loop.c
 
 
 # HAL

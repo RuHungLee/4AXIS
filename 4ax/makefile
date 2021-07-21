@@ -18,6 +18,7 @@ INCLUDE+=-I$(DRIVERS)/CMSIS/Include
 INCLUDE+=-I$(DRIVERS)/STM32_DMP_Driver/Include/MPU6050
 INCLUDE+=-I$(DRIVERS)/STM32_ESP8266/Include
 INCLUDE+=-I$(DRIVERS)/STM32_2401_Driver/Include
+INCLUDE+=-I$(DRIVERS)/STM32_BMP_Driver/Include
 INCLUDE+=-I$(DRIVERS)/STM32F4xx_HAL_Driver/Inc
 INCLUDE+=-I$(FREERTOS)/portable/GCC/ARM_CM4F
 INCLUDE+=-I$(FREERTOS)/include
@@ -31,6 +32,7 @@ vpath %.c   $(CORE)/Src \
 			$(CORE)/Startup \
 			$(DRIVERS)/STM32_DMP_Driver/Source/MPU6050 \
 			$(DRIVERS)/STM32_2401_Driver/Source \
+			$(DRIVERS)/STM32_BMP_Driver/Source \
 			$(DRIVERS)/STM32_ESP8266/Source \
 			$(DRIVERS)/STM32F4xx_HAL_Driver/Src \
 			$(FREERTOS) \
@@ -85,6 +87,9 @@ src+=I2C.c
 src+=inv_mpu.c
 src+=inv_mpu_dmp_motion_driver.c
 src+=mpu6050.c
+
+# BMP180 驅動
+src+=bmp.c
 
 # nrf2401 驅動
 src+=nrf24.c

@@ -6,26 +6,33 @@
 #define kp_rate_roll 0.085
 #define kp_rate_pitch 0.085
 #define kp_rate_yaw 0.0
+#define kp_rate_height 0.0
 
 #define ki_rate_roll 0.01
 #define ki_rate_pitch 0.01
 #define ki_rate_yaw 0.0
+#define ki_rate_height 0.0
 
 #define kd_rate_roll 0.5
 #define kd_rate_pitch 0.5
 #define kd_rate_yaw 0.0
+#define kd_rate_height 0.0
 
 #define kp_roll 55.0
 #define kp_pitch 55.0
 #define kp_yaw 1.0
+#define kp_height 0.0
 
 #define ki_roll 0.0
 #define ki_pitch 0.0
 #define ki_yaw 0.0
+#define ki_height 0.0
 
 #define kd_roll 0.0
 #define kd_pitch 0.0
 #define kd_yaw 0.0
+#define kd_height 0.0
+
 
 //積分限幅
 #define pid_imax 500.0
@@ -37,6 +44,7 @@ extern short gyro[3];
 extern int throttle;
 extern uint8_t rx_Buffer[1024];
 
+float height;
 
 pst pid_roll = {
 
@@ -94,11 +102,29 @@ pst pid_yaw = {
 };
 
 
+pst pid_height = {
+
+    .kp_rate = kp_rate_height,
+    .ki_rate = ki_rate_height,
+    .kd_rate = kd_rate_height,
+    .last_angv = 0,
+    .kp = kp_height,
+    .ki = ki_height,
+    .kd = kd_height,
+    .last_ang = 0,
+    .imax = pid_imax,
+    .imin = pid_imin,
+    .out = 0,
+    .last_out = 0,
+    .feedback = &height,
+    .ii = 0
+};
+
 void motor_update(){
 
-    int pid_pitch_value = limit(pid_control(Qpost.roll , Qpost.pitch , Qpost.yaw , 'P') , 200 , -200 );
-    int pid_roll_value = limit(pid_control(Qpost.roll , Qpost.pitch , Qpost.yaw , 'R') , 200 , -200 );
-    int pid_yaw_value = limit(pid_control(Qpost.roll , Qpost.pitch , Qpost.yaw , 'Y') , 200 , -200 );
+    int pid_pitch_value = limit(pid_control(Qpost.roll , Qpost.pitch , Qpost.yaw , 'P' , 0 ) , 200 , -200 );
+    int pid_roll_value = limit(pid_control(Qpost.roll , Qpost.pitch , Qpost.yaw , 'R' , 0 ) , 200 , -200 );
+    int pid_yaw_value = limit(pid_control(Qpost.roll , Qpost.pitch , Qpost.yaw , 'Y' , 0 ) , 200 , -200 );
 
     throttle = Qpost.throttle;
 
@@ -125,7 +151,7 @@ void motor_update(){
 }
 
 
-int pid_control(float set_roll , float set_pitch , float set_yaw , char op){
+int pid_control(float set_roll , float set_pitch , float set_yaw , char op , float h){
 
 
     if(op == 'P'){
@@ -203,6 +229,28 @@ int pid_control(float set_roll , float set_pitch , float set_yaw , char op){
         }
 
         return (int)pid_yaw.last_out;
+    
+    }else if(op == 'H'){
+
+        // 高度 PID : 外環控高度 , 內環控速度
+        static float vnow , vpre , hpre , lastp;
+        float dt = 0.002;
+
+        vnow = limit((*pid_height.feedback - hpre)/dt , -300 , 300);
+        vnow = vnow * 0.2 + vpre * 0.8;
+        vpre = vnow;
+        hpre = *pid_height.feedback;
+
+        // PID 外環
+        pid_height.out = pid_height.kp * (h - *pid_height.feedback);
+
+        // PID 內環
+        pid_height.p = pid_height.out - vnow;
+        pid_height.i += pid_height.p;
+        pid_height.d = pid_height.p - lastp;
+        pid_height.out = pid_height.kp_rate * pid_height.p + pid_height.ki_rate * pid_height.i + pid_height.kd_rate * pid_height.d;
+        lastp = pid_height.p;
+
     }
     
 }

@@ -2,7 +2,7 @@
 #define PID_H
 
 float limit(float , float , float);
-int pid_control(float , float , float , char);
+int pid_control(float , float , float , char , float);
 void motor_update();
 
 typedef struct pid_struct{

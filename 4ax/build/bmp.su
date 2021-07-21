@@ -1,0 +1,9 @@
+/home/ruhung/4axis/4AXIS/4ax/Drivers/STM32_BMP_Driver/Source/bmp.c:27:18:read_chip_id	32	static
+/home/ruhung/4axis/4AXIS/4ax/Drivers/STM32_BMP_Driver/Source/bmp.c:49:13:set_oss	40	static
+/home/ruhung/4axis/4AXIS/4ax/Drivers/STM32_BMP_Driver/Source/bmp.c:94:18:read_calib_data	64	static
+/home/ruhung/4axis/4AXIS/4ax/Drivers/STM32_BMP_Driver/Source/bmp.c:123:6:bmp_init	24	static
+/home/ruhung/4axis/4AXIS/4ax/Drivers/STM32_BMP_Driver/Source/bmp.c:136:9:get_ut	32	static
+/home/ruhung/4axis/4AXIS/4ax/Drivers/STM32_BMP_Driver/Source/bmp.c:153:7:get_temp	32	static
+/home/ruhung/4axis/4AXIS/4ax/Drivers/STM32_BMP_Driver/Source/bmp.c:177:9:get_up	40	static
+/home/ruhung/4axis/4AXIS/4ax/Drivers/STM32_BMP_Driver/Source/bmp.c:196:9:get_pressure	40	static
+/home/ruhung/4axis/4AXIS/4ax/Drivers/STM32_BMP_Driver/Source/bmp.c:234:7:get_altitude	24	static

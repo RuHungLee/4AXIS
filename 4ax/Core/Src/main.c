@@ -11,12 +11,14 @@
 #include "task.h"
 #include "esp.h"
 #include "ano.h"
+#include "bmp.h"
 
 #define CCM_RAM __attribute__((section(".ccmram")))
 
 extern float roll , pitch , yaw;
 extern pst pid_roll , pid_pitch , pid_yaw;
 extern int throttle;
+extern bmp_t bmp;
 extern uint8_t rx_Buffer[1024];
 extern uint8_t packetRecved;
 
@@ -42,44 +44,28 @@ int main(void)
   	MPU6050_initialize();
   	DMP_Init();
   	ESP_Init();
-      	
-    int cnt = 0;
+    bmp_init(&bmp);
 
   	while(1){
 
-  		Read_DMP();
-  		ToEulerAngles();
-      // printf("short : %d , short : %d , short : %d\n" , (int)gyro[0] , (int)gyro[1] , (int)gyro[2]);
-      pitch = pitch + 2;
-      roll = roll;
-      if(cnt % 20 == 0){
-  		  ANO_DT_Send_Status(roll , pitch , yaw , 0 , 0 , 0);
-      }
-  		packetHandler();
-  		motor_update();  
-      cnt = cnt + 1;
-
-      // printf("kp : %.2f\n" , pid_roll.kp);
-      // printf("ki : %.2f\n" , pid_roll.ki);
-      // printf("kd : %.2f\n" , pid_roll.kd);
-      // printf("kp_rate : %.2f\n" , pid_roll.kp_rate);
-      // printf("ki_rate : %.2f\n" , pid_roll.ki_rate);
-      // printf("kd_rate : %.2f\n" , pid_roll.kd_rate);
-    
-      // printf("kp : %.2f\n" , pid_pitch.kp);
-      // printf("ki : %.2f\n" , pid_pitch.ki);
-      // printf("kd : %.2f\n" , pid_pitch.kd);
-      // printf("kp_rate : %.2f\n" , pid_pitch.kp_rate);
-      // printf("ki_rate : %.2f\n" , pid_pitch.ki_rate);
-      // printf("kd_rate : %.2f\n" , pid_pitch.kd_rate);
-
-      // printf("kp : %.2f\n" , pid_yaw.kp);
-      // printf("ki : %.2f\n" , pid_yaw.ki);
-      // printf("kd : %.2f\n" , pid_yaw.kd);
-      // printf("kp_rate : %.2f\n" , pid_yaw.kp_rate);
-      // printf("ki_rate : %.2f\n" , pid_yaw.ki_rate);
-      // printf("kd_rate : %.2f\n" , pid_yaw.kd_rate);
+      // Read_DMP();
+      // ToEulerAngles();
+      // // printf("short : %d , short : %d , short : %d\n" , (int)gyro[0] , (int)gyro[1] , (int)gyro[2]);
+      // pitch = pitch + 2;
+      // roll = roll;
+      // if(cnt % 20 == 0){
+      //   ANO_DT_Send_Status(roll , pitch , yaw , 0 , 0 , 0);
+      // }
+      // packetHandler();
+      // motor_update();  
+      // cnt = cnt + 1;
       
+      bmp.uncomp.temp = get_ut();
+      bmp.data.temp = get_temp(&bmp);
+      bmp.uncomp.press = get_up(bmp.oss);
+      bmp.data.press = get_pressure(bmp);
+      bmp.data.altitude = get_altitude(&bmp);
+
     }
 }
  

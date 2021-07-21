@@ -1,3 +1,3 @@
-/home/ruhung/4axis/4AXIS/4ax/Core/Algorithm/pid2loop.c:97:6:motor_update	24	static
-/home/ruhung/4axis/4AXIS/4ax/Core/Algorithm/pid2loop.c:128:5:pid_control	24	static
-/home/ruhung/4axis/4AXIS/4ax/Core/Algorithm/pid2loop.c:211:7:limit	24	static
+/home/ruhung/4axis/4AXIS/4ax/Core/Algorithm/pid2loop.c:123:6:motor_update	24	static
+/home/ruhung/4axis/4AXIS/4ax/Core/Algorithm/pid2loop.c:154:5:pid_control	48	static
+/home/ruhung/4axis/4AXIS/4ax/Core/Algorithm/pid2loop.c:259:7:limit	24	static

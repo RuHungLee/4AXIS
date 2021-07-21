@@ -1,4 +1,4 @@
-/home/ruhung/STM32CubeIDE/workspace_1.7/4ax/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c:101:19:HAL_DMAEx_MultiBufferStart	32	static
-/home/ruhung/STM32CubeIDE/workspace_1.7/4ax/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c:155:19:HAL_DMAEx_MultiBufferStart_IT	32	static
-/home/ruhung/STM32CubeIDE/workspace_1.7/4ax/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c:240:19:HAL_DMAEx_ChangeMemory	24	static
-/home/ruhung/STM32CubeIDE/workspace_1.7/4ax/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c:277:13:DMA_MultiBufferSetConfig	24	static
+/home/ruhung/4axis/4AXIS/4ax/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c:101:19:HAL_DMAEx_MultiBufferStart	32	static
+/home/ruhung/4axis/4AXIS/4ax/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c:155:19:HAL_DMAEx_MultiBufferStart_IT	32	static
+/home/ruhung/4axis/4AXIS/4ax/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c:240:19:HAL_DMAEx_ChangeMemory	24	static
+/home/ruhung/4axis/4AXIS/4ax/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c:277:13:DMA_MultiBufferSetConfig	24	static

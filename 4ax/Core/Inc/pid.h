@@ -17,7 +17,7 @@ typedef struct pid_struct{
     float kd_rate;
     float last_ang; //outer
     float *feedback;
-    float p , i , d , imax , imin;
+    float p , i , d , ii , imax , imin;
     float out , last_out;
 
 }pst;

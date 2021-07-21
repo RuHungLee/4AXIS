@@ -1,2 +1,2 @@
-/home/ruhung/STM32CubeIDE/workspace_1.7/4ax/build/sysmem.o: \
- /home/ruhung/STM32CubeIDE/workspace_1.7/4ax/Core/Src/sysmem.c
+/home/ruhung/4axis/4AXIS/4ax/build/sysmem.o: \
+ /home/ruhung/4axis/4AXIS/4ax/Core/Src/sysmem.c

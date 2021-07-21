@@ -49,7 +49,9 @@ int main(void)
 
   		Read_DMP();
   		ToEulerAngles();
-      pitch = pitch + 1;
+      // printf("short : %d , short : %d , short : %d\n" , (int)gyro[0] , (int)gyro[1] , (int)gyro[2]);
+      pitch = pitch + 2;
+      roll = roll;
       if(cnt % 20 == 0){
   		  ANO_DT_Send_Status(roll , pitch , yaw , 0 , 0 , 0);
       }

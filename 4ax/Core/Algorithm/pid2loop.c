@@ -1,36 +1,35 @@
-<<<<<<< HEAD
 #include "pid.h"
 #include "post.h"
 #include "math.h"
 #include "motor.h"
 
-#define kp_rate_roll 0.0
-#define kp_rate_pitch 0.0
+#define kp_rate_roll 0.085
+#define kp_rate_pitch 0.085
 #define kp_rate_yaw 0.0
 
-#define ki_rate_roll 0.0
-#define ki_rate_pitch 0.0
+#define ki_rate_roll 0.01
+#define ki_rate_pitch 0.01
 #define ki_rate_yaw 0.0
 
-#define kd_rate_roll 0.0
-#define kd_rate_pitch 0.0
+#define kd_rate_roll 0.5
+#define kd_rate_pitch 0.5
 #define kd_rate_yaw 0.0
 
-#define kp_roll 2.65
-#define kp_pitch 3.5
+#define kp_roll 55.0
+#define kp_pitch 55.0
 #define kp_yaw 1.0
 
-#define ki_roll 0.013
-#define ki_pitch 0.0001
+#define ki_roll 0.0
+#define ki_pitch 0.0
 #define ki_yaw 0.0
 
-#define kd_roll 2.4
-#define kd_pitch 2.65
+#define kd_roll 0.0
+#define kd_pitch 0.0
 #define kd_yaw 0.0
 
 //積分限幅
-#define pid_imax 800.0
-#define pid_imin -800.0
+#define pid_imax 500.0
+#define pid_imin -500.0
 
 extern post Qpost;
 extern float roll , pitch , yaw;
@@ -53,7 +52,8 @@ pst pid_roll = {
     .imin = pid_imin,
     .out = 0,
     .last_out = 0,
-    .feedback = &roll
+    .feedback = &roll,
+    .ii = 0
 };
 
 pst pid_pitch = {
@@ -71,7 +71,8 @@ pst pid_pitch = {
     .out = 0,
     .last_out = 0,
     .last_error = 0,
-    .feedback = &pitch
+    .feedback = &pitch,
+    .ii = 0
 };
 
 pst pid_yaw = {
@@ -88,7 +89,8 @@ pst pid_yaw = {
     .imin = pid_imin,
     .out = 0,
     .last_out = 0,
-    .feedback = &yaw
+    .feedback = &yaw,
+    .ii = 0
 };
 
 
@@ -136,15 +138,17 @@ int pid_control(float set_roll , float set_pitch , float set_yaw , char op){
             pid_pitch.p = pid_pitch.error;    
             pid_pitch.i += pid_pitch.error;
             pid_pitch.i = limit(pid_pitch.i , pid_pitch.imax , pid_pitch.imin);
-            pid_pitch.d = *pid_pitch.feedback - pid_pitch.last_ang;
+            pid_pitch.d = (float)gyro[1] * 0.0305175;
             pid_pitch.last_ang = *pid_pitch.feedback;
             pid_pitch.out = pid_pitch.kp * pid_pitch.p + pid_pitch.ki * pid_pitch.i + pid_pitch.kd * pid_pitch.d;
-    
+            
             // PID 內環
             pid_pitch.p = pid_pitch.out + gyro[1];
-            pid_pitch.d = gyro[1] - pid_pitch.last_angv;
-            pid_pitch.out = pid_pitch.kp_rate * pid_pitch.p + pid_pitch.kd_rate * pid_pitch.d;
-            pid_pitch.last_angv = gyro[1];
+            pid_pitch.ii += pid_pitch.p;
+            pid_pitch.ii = limit(pid_pitch.ii , pid_pitch.imax , pid_pitch.imin);
+            pid_pitch.d = pid_pitch.p - pid_pitch.last_angv;
+            pid_pitch.out = pid_pitch.kp_rate * pid_pitch.p + pid_pitch.ki_rate * pid_pitch.ii + pid_pitch.kd_rate * pid_pitch.d;
+            pid_pitch.last_angv = pid_pitch.p;
 
             return (int)pid_pitch.out;
         }
@@ -153,7 +157,7 @@ int pid_control(float set_roll , float set_pitch , float set_yaw , char op){
 
     }else if(op == 'R'){
 
-        pid_roll.error = *pid_roll.feedback - set_pitch;
+        pid_roll.error = *pid_roll.feedback - set_roll;
 
         if(fabs(pid_roll.error) > 0.01)
         {
@@ -161,15 +165,17 @@ int pid_control(float set_roll , float set_pitch , float set_yaw , char op){
             pid_roll.p = pid_roll.error;    
             pid_roll.i += pid_roll.error;
             pid_roll.i = limit(pid_roll.i , pid_roll.imax , pid_roll.imin);
-            pid_roll.d = *pid_roll.feedback - pid_roll.last_ang;
+            pid_roll.d = (float)gyro[0] * 0.0305175;
             pid_roll.last_ang = *pid_roll.feedback;
             pid_roll.out = pid_roll.kp * pid_roll.p + pid_roll.ki * pid_roll.i + pid_roll.kd * pid_roll.d;
-    
+
             // PID 內環
             pid_roll.p = pid_roll.out + gyro[0];
-            pid_roll.d = gyro[0] - pid_roll.last_angv;
-            pid_roll.out = pid_roll.kp_rate * pid_roll.p + pid_roll.kd_rate * pid_roll.d;
-            pid_roll.last_angv = gyro[0];
+            pid_roll.ii += pid_roll.p;
+            pid_roll.ii = limit(pid_roll.ii , pid_roll.imax , pid_roll.imin);
+            pid_roll.d = pid_roll.p - pid_roll.last_angv;
+            pid_roll.out = pid_roll.kp_rate * pid_roll.p + pid_roll.ki_rate * pid_roll.ii + pid_roll.kd_rate * pid_roll.d;
+            pid_roll.last_angv = pid_roll.p;
 
             return (int)pid_roll.out;
         }
@@ -182,21 +188,18 @@ int pid_control(float set_roll , float set_pitch , float set_yaw , char op){
 
         if(fabs(pid_yaw.error) > 0.01)
         {
-            // PID 外環
+
             pid_yaw.p = pid_yaw.error;    
             pid_yaw.i += pid_yaw.error;
-            pid_yaw.i = limit(pid_yaw.i , pid_yaw.imax , pid_yaw.imin);
-            pid_yaw.d = *pid_yaw.feedback - pid_yaw.last_ang;
-            pid_yaw.last_ang = *pid_yaw.feedback;
+            pid_yaw.i = limit(pid_yaw.i , pid_yaw.imax , pid_roll.imin);
+            pid_yaw.d = (float)gyro[2] * 0.0305175;
             pid_yaw.out = pid_yaw.kp * pid_yaw.p + pid_yaw.ki * pid_yaw.i + pid_yaw.kd * pid_yaw.d;
-    
-            // PID 內環
-            pid_yaw.p = pid_yaw.out + gyro[2];
-            pid_yaw.d = gyro[2] - pid_yaw.last_angv;
-            pid_yaw.out = pid_yaw.kp_rate * pid_yaw.p + pid_yaw.kd_rate * pid_yaw.d;
-            pid_yaw.last_angv = gyro[2];
-
+            pid_yaw.last_ang = *pid_yaw.feedback;
+            pid_yaw.last_error = pid_yaw.error;  
+            pid_yaw.last_out = pid_yaw.out;
+            
             return (int)pid_yaw.out;
+
         }
 
         return (int)pid_yaw.last_out;
@@ -215,84 +218,4 @@ float limit(float n , float max , float min){
 
     return n;
 }
-=======
-int pid_control(float set_roll , float set_pitch , float set_yaw , char op){
 
-
-    if(op == 'P'){
-
-        pid_pitch.error = *pid_pitch.feedback - set_pitch;
-
-        if(fabs(pid_pitch.error) > 0.01)
-        {
-            // PID 外環
-            pid_pitch.p = pid_pitch.error;    
-            pid_pitch.i += pid_pitch.error;
-            pid_pitch.i = limit(pid_pitch.i , pid_pitch.imax , pid_pitch.imin);
-            pid_pitch.d = pid_pitch.feedback - pid_pitch.last_ang;
-            pid_pitch.last_ang = pid_pitch.feedback;
-            pid_pitch.out = pid_pitch.kp * pid_pitch.p + pid_pitch.ki * pid_pitch.i + pid_pitch.kd * pid_pitch.d;
-    
-            // PID 內環
-            pid_pitch.p = pid_pitch.out + gyro[1];
-            pid_pitch.d = gyro[1] - pid_pitch.last_angv;
-            pid_pitch.out = pid_pitch.kp_rate * pid_pitch.p + pid_pitch.kd_rate * pid_pitch.d;
-            pid_pitch.last_angv = gyro[1];
-
-            return (int)pid_pitch.out;
-        }
-
-        return (int)pid_pitch.last_out;
-
-    }else if(op == 'R'){
-
-        pid_roll.error = *pid_roll.feedback - set_pitch;
-
-        if(fabs(pid_roll.error) > 0.01)
-        {
-            // PID 外環
-            pid_roll.p = pid_roll.error;    
-            pid_roll.i += pid_roll.error;
-            pid_roll.i = limit(pid_roll.i , pid_roll.imax , pid_roll.imin);
-            pid_roll.d = pid_roll.feedback - pid_roll.last_ang;
-            pid_roll.last_ang = pid_roll.feedback;
-            pid_roll.out = pid_roll.kp * pid_roll.p + pid_roll.ki * pid_roll.i + pid_roll.kd * pid_roll.d;
-    
-            // PID 內環
-            pid_roll.p = pid_roll.out + gyro[0];
-            pid_roll.d = gyro[0] - pid_roll.last_angv;
-            pid_roll.out = pid_roll.kp_rate * pid_roll.p + pid_roll.kd_rate * pid_roll.d;
-            pid_roll.last_angv = gyro[0];
-
-            return (int)pid_roll.out;
-        }
-
-        return (int)pid_roll.last_out;
-
-    }else if(op == 'Y'){
-
-        pid_yaw.error = *pid_yaw.feedback - set_pitch;
-
-        if(fabs(pid_yaw.error) > 0.01)
-        {
-            // PID 外環
-            pid_yaw.p = pid_yaw.error;    
-            pid_yaw.i += pid_yaw.error;
-            pid_yaw.i = limit(pid_yaw.i , pid_yaw.imax , pid_yaw.imin);
-            pid_yaw.d = pid_yaw.feedback - pid_yaw.last_ang;
-            pid_yaw.last_ang = pid_yaw.feedback;
-            pid_yaw.out = pid_yaw.kp * pid_yaw.p + pid_yaw.ki * pid_yaw.i + pid_yaw.kd * pid_yaw.d;
-    
-            // PID 內環
-            pid_yaw.p = pid_yaw.out + gyro[2];
-            pid_yaw.d = gyro[2] - pid_yaw.last_angv;
-            pid_yaw.out = pid_yaw.kp_rate * pid_yaw.p + pid_yaw.kd_rate * pid_yaw.d;
-            pid_yaw.last_angv = gyro[2];
-
-            return (int)pid_yaw.out;
-        }
-
-        return (int)pid_yaw.last_out;
-    
-}
->>>>>>> c57797ac8b5cf52908323ea5b16f720d364defef

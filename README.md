@@ -2,19 +2,13 @@
 
 開發版 : STM32F4
 
-機架 : F450
-
-姿態傳感器 : MPU9250
-
 作業系統 : FreeRTOS
 
-通訊模組 : ESP8266
+使用傳感器 : ESP8266 , MPU9250 , TF02
 
-演算法 : 單/串級 PID 控制
+控制演算法 : double loop pid control
 
-使用驅動 : 
-* STM32 HAL lib
-* MPU DMP Driver ( https://github.com/fMeow/STM32_DMP_Driver )
+x , y 軸平衡使用角度角速度雙環 , z 軸定高使用高度速度雙環
 
 地面工作站 : 
 * 自製地面工作站 ( https://github.com/RuHungLee/MyDroneGCS )

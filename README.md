@@ -6,7 +6,7 @@
 
 使用傳感器 : ESP8266 , MPU9250 , TF02
 
-控制演算法 : double loop pid control
+控制演算法 : double loop pid controller
 
 x , y 軸平衡使用角度角速度雙環 , z 軸定高使用高度速度雙環
 

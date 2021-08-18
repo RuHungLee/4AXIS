@@ -14,5 +14,18 @@ control algorithm : double loop pid controller
 
 https://github.com/RuHungLee/MyDroneGCS
 
+## Build and Program flash
+
+```
+make all
+make flash 
+```
+
+## Debug
+
+```
+arm-none-eabi-gdb
+target remote localhost:<port>
+```
 
 

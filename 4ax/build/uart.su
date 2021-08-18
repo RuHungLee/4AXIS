@@ -1,7 +1,8 @@
-/home/ruhung/4axis/4AXIS/4ax/Core/Src/uart.c:28:1:__io_putchar	16	static
-/home/ruhung/4axis/4AXIS/4ax/Core/Src/uart.c:36:6:USART1_IRQHandler	16	static
-/home/ruhung/4axis/4AXIS/4ax/Core/Src/uart.c:64:6:DMA2_Stream2_IRQHandler	8	static
-/home/ruhung/4axis/4AXIS/4ax/Core/Src/uart.c:70:6:USART2_IRQHandler	8	static
-/home/ruhung/4axis/4AXIS/4ax/Core/Src/uart.c:76:6:DMA1_Stream5_IRQHandler	8	static
-/home/ruhung/4axis/4AXIS/4ax/Core/Src/uart.c:81:6:SysTick_Handler	8	static
-/home/ruhung/4axis/4AXIS/4ax/Core/Src/uart.c:86:6:I2C1_EV_IRQHandler	8	static
+/home/ruhung/4axis/4AXIS/4ax/Core/Src/uart.c:34:1:__io_putchar	16	static
+/home/ruhung/4axis/4AXIS/4ax/Core/Src/uart.c:42:6:USART1_IRQHandler	16	static
+/home/ruhung/4axis/4AXIS/4ax/Core/Src/uart.c:69:6:UART4_IRQHandler	16	static
+/home/ruhung/4axis/4AXIS/4ax/Core/Src/uart.c:90:6:DMA2_Stream2_IRQHandler	8	static
+/home/ruhung/4axis/4AXIS/4ax/Core/Src/uart.c:96:6:USART2_IRQHandler	8	static
+/home/ruhung/4axis/4AXIS/4ax/Core/Src/uart.c:102:6:DMA1_Stream5_IRQHandler	8	static
+/home/ruhung/4axis/4AXIS/4ax/Core/Src/uart.c:107:6:DMA1_Stream2_IRQHandler	8	static
+/home/ruhung/4axis/4AXIS/4ax/Core/Src/uart.c:112:6:I2C1_EV_IRQHandler	8	static

@@ -12,13 +12,16 @@ TIM_HandleTypeDef htim5;
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 UART_HandleTypeDef huart3;
+UART_HandleTypeDef huart4;
 DMA_HandleTypeDef hdma_usart1_rx;
 DMA_HandleTypeDef hdma_usart2_rx;
+DMA_HandleTypeDef hdma_uart4_rx;
 I2C_HandleTypeDef hi2c1;
 SPI_HandleTypeDef hspi2;
 
 
-extern uint8_t rx_Buffer[BUFFER_SIZE];
+extern uint8_t rx1_Buffer[BUFFER_SIZE];
+extern uint8_t rx4_Buffer[BUFFER_SIZE];
 
 void sysInit(void)
 {
@@ -30,7 +33,10 @@ void sysInit(void)
   MX_TIM4_Init();
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
-  HAL_UART_Receive_DMA(&huart1,rx_Buffer,BUFFER_SIZE);
+  MX_USART3_UART_Init();
+  MX_USART4_UART_Init();
+  HAL_UART_Receive_DMA(&huart1 , rx1_Buffer , BUFFER_SIZE);
+  HAL_UART_Receive_DMA(&huart4 , rx4_Buffer , BUFFER_SIZE);
   MX_SPI2_Init();
   motor_Init();
 
@@ -298,7 +304,7 @@ void MX_USART2_UART_Init(void)
 }
 
 
-static void MX_USART3_UART_Init(void)
+void MX_USART3_UART_Init(void)
 {
 
   huart3.Instance = USART3;
@@ -316,12 +322,31 @@ static void MX_USART3_UART_Init(void)
 
 }
 
+void MX_USART4_UART_Init(void)
+{
+
+  huart4.Instance = UART4;
+  huart4.Init.BaudRate = 115200;
+  huart4.Init.WordLength = UART_WORDLENGTH_8B;
+  huart4.Init.StopBits = UART_STOPBITS_1;
+  huart4.Init.Parity = UART_PARITY_NONE;
+  huart4.Init.Mode = UART_MODE_TX_RX;
+  huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart4.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  __HAL_UART_ENABLE_IT(&huart4, UART_IT_IDLE); 
+}
 
 void MX_DMA_Init(void)
 {
 
   __HAL_RCC_DMA1_CLK_ENABLE();
   __HAL_RCC_DMA2_CLK_ENABLE();
+  HAL_NVIC_SetPriority(DMA1_Stream2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream2_IRQn);
   HAL_NVIC_SetPriority(DMA1_Stream5_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream5_IRQn);
   HAL_NVIC_SetPriority(DMA2_Stream2_IRQn, 0, 0);

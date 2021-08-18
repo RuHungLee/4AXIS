@@ -38,7 +38,7 @@ void ANO_DT_Send_Status(float angle_rol, float angle_pit, float angle_yaw, s32 a
 	_temp = (int)(angle_yaw*100);
 	data_to_send[_cnt++]=BYTE1(_temp);
 	data_to_send[_cnt++]=BYTE0(_temp);
-	
+	// _temp2 = alt
 	data_to_send[_cnt++]=BYTE3(_temp2);
 	data_to_send[_cnt++]=BYTE2(_temp2);
 	data_to_send[_cnt++]=BYTE1(_temp2);

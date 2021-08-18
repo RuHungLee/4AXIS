@@ -6,5 +6,5 @@
 /home/ruhung/4axis/4AXIS/4ax/Core/Src/stm32f4xx_hal_msp.c:175:6:HAL_TIM_Base_MspInit	32	static
 /home/ruhung/4axis/4AXIS/4ax/Core/Src/stm32f4xx_hal_msp.c:198:6:HAL_TIM_MspPostInit	48	static
 /home/ruhung/4axis/4AXIS/4ax/Core/Src/stm32f4xx_hal_msp.c:252:6:HAL_TIM_Base_MspDeInit	16	static
-/home/ruhung/4axis/4AXIS/4ax/Core/Src/stm32f4xx_hal_msp.c:281:6:HAL_UART_MspInit	64	static
-/home/ruhung/4axis/4AXIS/4ax/Core/Src/stm32f4xx_hal_msp.c:405:6:HAL_UART_MspDeInit	16	static
+/home/ruhung/4axis/4AXIS/4ax/Core/Src/stm32f4xx_hal_msp.c:281:6:HAL_UART_MspInit	72	static
+/home/ruhung/4axis/4AXIS/4ax/Core/Src/stm32f4xx_hal_msp.c:445:6:HAL_UART_MspDeInit	16	static

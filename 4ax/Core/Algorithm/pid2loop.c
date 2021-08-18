@@ -3,24 +3,24 @@
 #include "math.h"
 #include "motor.h"
 
-#define kp_rate_roll 0.085
-#define kp_rate_pitch 0.085
+#define kp_rate_roll 0.0
+#define kp_rate_pitch 0.0
 #define kp_rate_yaw 0.0
 #define kp_rate_height 0.0
 
-#define ki_rate_roll 0.01
-#define ki_rate_pitch 0.01
+#define ki_rate_roll 0.0
+#define ki_rate_pitch 0.0
 #define ki_rate_yaw 0.0
 #define ki_rate_height 0.0
 
-#define kd_rate_roll 0.5
-#define kd_rate_pitch 0.5
+#define kd_rate_roll 0
+#define kd_rate_pitch 0
 #define kd_rate_yaw 0.0
 #define kd_rate_height 0.0
 
-#define kp_roll 55.0
-#define kp_pitch 55.0
-#define kp_yaw 1.0
+#define kp_roll 0.0
+#define kp_pitch 0.0
+#define kp_yaw 0.0
 #define kp_height 0.0
 
 #define ki_roll 0.0
@@ -120,7 +120,9 @@ pst pid_height = {
     .ii = 0
 };
 
-void motor_update(){
+void AngPIDController(){
+
+    while(1){
 
     int pid_pitch_value = limit(pid_control(Qpost.roll , Qpost.pitch , Qpost.yaw , 'P' , 0 ) , 200 , -200 );
     int pid_roll_value = limit(pid_control(Qpost.roll , Qpost.pitch , Qpost.yaw , 'R' , 0 ) , 200 , -200 );
@@ -131,28 +133,35 @@ void motor_update(){
     //大於 60 度時停止馬達。
     if(fabs(pitch) > 50 || fabs(roll) > 50){throttle = 800;}
 
-    if(throttle > 850){
+    if(throttle > 810){
         
-        ch1 = throttle - pid_pitch_value  + pid_yaw_value;
-        ch2 = throttle - pid_roll_value - pid_yaw_value;
-        ch3 = throttle + pid_pitch_value + pid_yaw_value; 
-        ch4 = throttle + pid_roll_value - pid_yaw_value;
-
+        // ch1 = throttle - pid_pitch_value  + pid_yaw_value;
+        // ch2 = throttle - pid_roll_value - pid_yaw_value;
+        // ch3 = throttle + pid_pitch_value + pid_yaw_value;
+        // ch4 = throttle + pid_roll_value - pid_yaw_value;
+        ch1 = throttle - pid_pitch_value;
+        ch2 = throttle + pid_pitch_value;
+        ch3 = throttle + pid_pitch_value;
+        ch4 = throttle - pid_pitch_value;
 
     }else{
 
-        ch1 = throttle - 3;
+        ch1 = throttle;
         ch2 = throttle;
         ch3 = throttle;
-        ch4 = throttle - 5;
+        ch4 = throttle;
 
     }
 
+    vTaskDelay(2);
+    
+    }
 }
 
 
 int pid_control(float set_roll , float set_pitch , float set_yaw , char op , float h){
 
+    float angv;
 
     if(op == 'P'){
 
@@ -160,11 +169,13 @@ int pid_control(float set_roll , float set_pitch , float set_yaw , char op , flo
 
         if(fabs(pid_pitch.error) > 0.01)
         {
+            angv = (float)gyro[1] * 0.0305175;
+
             // PID 外環
             pid_pitch.p = pid_pitch.error;    
             pid_pitch.i += pid_pitch.error;
             pid_pitch.i = limit(pid_pitch.i , pid_pitch.imax , pid_pitch.imin);
-            pid_pitch.d = (float)gyro[1] * 0.0305175;
+            pid_pitch.d = angv;
             pid_pitch.last_ang = *pid_pitch.feedback;
             pid_pitch.out = pid_pitch.kp * pid_pitch.p + pid_pitch.ki * pid_pitch.i + pid_pitch.kd * pid_pitch.d;
             
@@ -172,9 +183,9 @@ int pid_control(float set_roll , float set_pitch , float set_yaw , char op , flo
             pid_pitch.p = pid_pitch.out + gyro[1];
             pid_pitch.ii += pid_pitch.p;
             pid_pitch.ii = limit(pid_pitch.ii , pid_pitch.imax , pid_pitch.imin);
-            pid_pitch.d = pid_pitch.p - pid_pitch.last_angv;
+            pid_pitch.d = angv - pid_pitch.last_angv;
             pid_pitch.out = pid_pitch.kp_rate * pid_pitch.p + pid_pitch.ki_rate * pid_pitch.ii + pid_pitch.kd_rate * pid_pitch.d;
-            pid_pitch.last_angv = pid_pitch.p;
+            pid_pitch.last_angv = angv;
 
             return (int)pid_pitch.out;
         }
@@ -187,11 +198,13 @@ int pid_control(float set_roll , float set_pitch , float set_yaw , char op , flo
 
         if(fabs(pid_roll.error) > 0.01)
         {
+            angv = (float)gyro[0] * 0.0305175;
+
             // PID 外環
             pid_roll.p = pid_roll.error;    
             pid_roll.i += pid_roll.error;
             pid_roll.i = limit(pid_roll.i , pid_roll.imax , pid_roll.imin);
-            pid_roll.d = (float)gyro[0] * 0.0305175;
+            pid_roll.d = angv;
             pid_roll.last_ang = *pid_roll.feedback;
             pid_roll.out = pid_roll.kp * pid_roll.p + pid_roll.ki * pid_roll.i + pid_roll.kd * pid_roll.d;
 
@@ -199,9 +212,9 @@ int pid_control(float set_roll , float set_pitch , float set_yaw , char op , flo
             pid_roll.p = pid_roll.out + gyro[0];
             pid_roll.ii += pid_roll.p;
             pid_roll.ii = limit(pid_roll.ii , pid_roll.imax , pid_roll.imin);
-            pid_roll.d = pid_roll.p - pid_roll.last_angv;
+            pid_roll.d = angv - pid_roll.last_angv;
             pid_roll.out = pid_roll.kp_rate * pid_roll.p + pid_roll.ki_rate * pid_roll.ii + pid_roll.kd_rate * pid_roll.d;
-            pid_roll.last_angv = pid_roll.p;
+            pid_roll.last_angv = angv;
 
             return (int)pid_roll.out;
         }

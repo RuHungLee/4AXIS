@@ -2,10 +2,10 @@
 #include <string.h>
 #include <stdio.h>
 
-const char *udpClient = "AT+CIPSTART=0,\"UDP\",\"192.168.4.2\",8086\r\n"; 
+const char *udpClient = "AT+CIPSTART=0,\"UDP\",\"192.168.4.3\",8086\r\n"; 
 const char *recvPort = "AT+CIPSTART=1,\"UDP\",\"192.168.4.1\",8086,8086,0\r\n";
 
-extern uint8_t rx_Buffer[BUFFER_SIZE];
+extern uint8_t rx1_Buffer[BUFFER_SIZE];
 extern UART_HandleTypeDef huart1;
 uint8_t espInit = 0;
 
@@ -25,7 +25,7 @@ void ESP_Init(void)
 		HAL_Delay(100);
 		HAL_UART_Transmit(&huart1 , (uint8_t *)recvPort , 47 , 2000);
 		HAL_Delay(100);
-		if(strstr((char *)rx_Buffer , "OK") != NULL){
+		if(strstr((char *)rx1_Buffer , "OK") != NULL){
 			printf("Start UDP connection.\n");
 			espInit = 1;
 		}else{

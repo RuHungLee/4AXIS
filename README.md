@@ -2,17 +2,39 @@
 
 Board : STM32F4
 
-operating system : FreeRTOS
+Operating system : FreeRTOS
 
-hardware sensors : ESP8266 , MPU9250 , TF02
+Sensors : ESP8266 , MPU9250 , TF02
 
-control algorithm : double loop pid controller
+Control algorithm : double loop pid control
 
 三軸平衡使用角度角速度雙環 , z 軸定高使用高度速度雙環
 
 地面工作站 : 
 
 https://github.com/RuHungLee/MyDroneGCS
+
+## Hardware configuration
+
+![Screenshot from 2021-08-18 23-00-31](https://user-images.githubusercontent.com/39644941/129922624-bb8b14d3-2817-421e-85be-f0cf19bf4bf1.png)
+
+### MPU9250
+
+PB6 : I2C1_SCL
+PB7 : I2C1_SDA
+STM32 Receiving method : polling
+
+### TF02
+
+PD8 : USART3_TX
+PB11 : USART3_RX
+STM32 Receiving method : polling
+
+### ESP8266
+
+PA0 : UART4_TX
+PA1 : UART4_RX
+STM32 Receiving method : idle interrupt , dma
 
 ## Build and Program flash
 

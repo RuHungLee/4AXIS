@@ -13,5 +13,5 @@
 /home/ruhung/4axis/4AXIS/4ax/Drivers/STM32_DMP_Driver/Source/MPU6050/mpu6050.c:299:6:MPU6050_setI2CBypassEnabled	16	static
 /home/ruhung/4axis/4AXIS/4ax/Drivers/STM32_DMP_Driver/Source/MPU6050/mpu6050.c:309:6:MPU6050_initialize	8	static
 /home/ruhung/4axis/4AXIS/4ax/Drivers/STM32_DMP_Driver/Source/MPU6050/mpu6050.c:324:6:DMP_Init	8	static
-/home/ruhung/4axis/4AXIS/4ax/Drivers/STM32_DMP_Driver/Source/MPU6050/mpu6050.c:358:6:Read_DMP	40	static
-/home/ruhung/4axis/4AXIS/4ax/Drivers/STM32_DMP_Driver/Source/MPU6050/mpu6050.c:386:5:Read_Temperature	16	static
+/home/ruhung/4axis/4AXIS/4ax/Drivers/STM32_DMP_Driver/Source/MPU6050/mpu6050.c:360:6:Read_DMP	56	static
+/home/ruhung/4axis/4AXIS/4ax/Drivers/STM32_DMP_Driver/Source/MPU6050/mpu6050.c:390:5:Read_Temperature	16	static

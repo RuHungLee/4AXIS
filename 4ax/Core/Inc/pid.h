@@ -3,7 +3,7 @@
 
 float limit(float , float , float);
 int pid_control(float , float , float , char , float);
-void AngPIDController(void);
+void AngPIDController(void *);
 void heightPIDController(void);
 
 typedef struct pid_struct{

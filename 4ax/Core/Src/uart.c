@@ -12,7 +12,6 @@ uint8_t rx4_Buffer[BUFFER_SIZE];
 uint8_t rx1Recv;
 uint8_t rx4Recv;
 
-
 extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart4;
@@ -20,7 +19,9 @@ extern DMA_HandleTypeDef hdma_usart1_rx;
 extern DMA_HandleTypeDef hdma_usart2_rx;
 extern DMA_HandleTypeDef hdma_uart4_rx;
 extern I2C_HandleTypeDef hi2c1;
+
 extern uint8_t wifi_rx_Buffer[1024];
+extern uint8_t wifi2_rx_Buffer[1024];
 extern uint8_t espInit;
 
 
@@ -51,6 +52,7 @@ void USART1_IRQHandler(void)
     
     if(strncmp(rx1_Buffer+2 , "+IPD" , 4) == 0){
       
+      memcpy(wifi2_rx_Buffer , rx1_Buffer+12 , 100);
       rx1Recv = 1;
     
     }
@@ -79,7 +81,7 @@ void UART4_IRQHandler(void)
     
     if(rx4_Buffer[0] == '\xaa' && rx4_Buffer[1] == '\xaf'){
 
-      memcpy(wifi_rx_Buffer , rx4_Buffer , 25);
+      memcpy(wifi_rx_Buffer , rx4_Buffer , 100);
       rx4Recv = 1;
     
     }

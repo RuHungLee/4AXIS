@@ -9,72 +9,98 @@
 #include "pid.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "rtosTasks.h"
 #include "esp.h"
 #include "ano.h"
 #include "bmp.h"
 
+
 #define CCM_RAM __attribute__((section(".ccmram")))
 
-extern float roll , pitch , yaw;
-extern float height; //cm
+static void systemConfig(void);
+static void packetHandler(void *);
+static void sendStatus(void *);
+static void PIDupdate(char *);
+static void POSEupdate(char *);
+
+extern float roll , pitch , yaw , height;
 extern pst pid_roll , pid_pitch , pid_yaw , pid_height;
-extern int throttle;
-extern bmp_t bmp;
 extern UART_HandleTypeDef huart2 , huart3 , huart4;
-extern uint8_t rx1_Buffer[1024];
-extern uint8_t rx4_Buffer[1024];
+
 extern uint8_t rx1Recv;
 extern uint8_t rx4Recv;
 
 uint8_t tf_rx_Buffer[1024]; 
 uint8_t wifi_rx_Buffer[1024];
+uint8_t wifi2_rx_Buffer[1024];
 
 post Qpost = {
 
-    .throttle = 0,
-    .roll = 0,
-    .pitch = 0,
-    .yaw = 0
+  .throttle = 0,
+  .roll = 0,
+  .pitch = 0,
+  .yaw = 0
 
 };
 
-void packetHandler(void);
-void PIDupdate(char *);
-void POSEupdate(char *);
-void sendStatus(void);
+tsks tskAry = {
+
+  .taskNum = 10
+
+};
+
 
 int main(void)
 {
 
-   	//驅動以及網路初始化
-   	sysInit();
-  	MPU6050_initialize();
-  	DMP_Init();
-  	ESP_Init();
 
+   	//系統初始化
+    systemConfig();
+
+
+    //任務頻率與優先級初始化
     // 1ms : MPU9250數據接收
     // 2ms : 三軸 PID 控制
     // 20ms : 遙控數據接收
     // 30ms : TF02 高度數據接收 , 高度 PID 控制
     // 50ms : 觀測資料傳送
+    tskStatusInit(&tskAry);
 
-    xTaskCreate(Read_DMP , "MPU9250數據接收" , 1024 , NULL , 4 , NULL);
-    xTaskCreate(AngPIDController , "三軸 PID 控制" , 1024 , NULL , 1 , NULL);
-    xTaskCreate(packetHandler , "無線通訊數據接收" , 1024 , NULL , 2 , NULL);
-    xTaskCreate(sendStatus , "傳送資料至地面站" , 1024 , NULL , 3 , NULL);
+
     // xTaskCreate(heightPIDController , "高度 PID 控制" , 1024 , NULL , 4 , NULL);
+    xTaskCreate(Read_DMP , "MPU9250數據接收" , STACKSIZE , &tskAry.freq[READDMP_IDX] , tskAry.priority[READDMP_IDX] , NULL);
+
+    xTaskCreate(AngPIDController , "三軸 PID 控制" , STACKSIZE , &tskAry.freq[ANGLEPID_IDX] , tskAry.priority[ANGLEPID_IDX] , NULL);
+
+    xTaskCreate(packetHandler , "無線通訊數據接收" , STACKSIZE , &tskAry.freq[PKTHDL_IDX] , tskAry.priority[PKTHDL_IDX] , NULL);
+
+    xTaskCreate(sendStatus , "傳送資料至地面站" , STACKSIZE , &tskAry.freq[SENDSTATUS_IDX] , tskAry.priority[SENDSTATUS_IDX] , NULL);
     
+
+    
+    //開始排程
     vTaskStartScheduler();
 
 }
 
-void sendStatus(void){
+void systemConfig(void){
+
+    sysInit();
+    MPU6050_initialize();
+    DMP_Init();
+    ESP_Init();
+
+}
+
+void sendStatus(void *tskfreq){
+
+  unsigned int *freq = (unsigned int *)tskfreq;
 
   while(1){
 
     ANO_DT_Send_Status(roll , pitch , yaw , height , 0 , 0);
 
-    vTaskDelay(50);
+    vTaskDelay(*freq);
 
   }
 
@@ -101,8 +127,10 @@ void heightPIDController(void){
 
 }
 
-void packetHandler(void)
+void packetHandler(void *tskfreq)
 {
+
+  unsigned int *freq = (unsigned int *)tskfreq;
 
   while(1){
 
@@ -131,7 +159,33 @@ void packetHandler(void)
 
     rx4Recv = 0;
 
-    vTaskDelay(20);
+    if (rx1Recv){
+
+      if(wifi2_rx_Buffer[0] == '\xaa' && wifi2_rx_Buffer[1] == '\xaf'){
+
+        char *ptr =  wifi2_rx_Buffer;
+        
+        ptr += 2;
+
+        switch(ptr[0]){
+          
+          case '\x10':
+
+            PIDupdate(ptr+1);
+
+          case '\x03':
+
+            POSEupdate(ptr+1);
+        }
+
+      }
+
+    }
+
+    rx1Recv = 0;
+
+
+    vTaskDelay(*freq);
 
   }
 

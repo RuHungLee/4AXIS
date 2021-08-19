@@ -120,7 +120,9 @@ pst pid_height = {
     .ii = 0
 };
 
-void AngPIDController(){
+void AngPIDController(void *tskfreq){
+
+    unsigned int *freq = (unsigned int *)tskfreq;
 
     while(1){
 
@@ -153,7 +155,7 @@ void AngPIDController(){
 
     }
 
-    vTaskDelay(2);
+    vTaskDelay(*freq);
     
     }
 }
